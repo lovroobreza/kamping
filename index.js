@@ -2,6 +2,14 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
+const engine = require('ejs-mate')
+const path = require('path')
+
+//need for ejs
+app.engine('ejs', engine)
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'views'))
+
 
 //midleware
 app.use(express.urlencoded({extended:true}))
@@ -24,13 +32,6 @@ db.once('open',  () => {
 
 //mongoose model
 const Campground = require('./models/Campground')
-
-
-//need for ejs
-const path = require('path')
-app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'views'))
-
 
 //paths
 app.get('/', (req,res)=>{
