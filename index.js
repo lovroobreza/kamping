@@ -6,12 +6,14 @@ const engine = require('ejs-mate')
 const path = require('path')
 const session = require('express-session')
 const flash = require('connect-flash')
+const passport = require('passport')
+const localPassport = require('passport-local')
+const User = require('./models/User')
 
 //need for ejs
 app.engine('ejs', engine)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
-
 
 //midleware
 app.use(express.urlencoded({extended:true}))
@@ -27,12 +29,21 @@ const sessionConfig ={
     saveUninitialized: true,
     cookie:{
         httpOnly:true,
+        //1 week expire
         expires: Date.now() + (1000*60*60*24*7),
         maxAge:1000*60*60*24*7
     }
 }
 
 app.use(session(sessionConfig))
+
+//passport
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new localPassport(User.authenticate()))
+
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
 
 //mongoose
 mongoose.connect('mongodb://localhost:27017/camp', {
