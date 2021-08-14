@@ -18,6 +18,14 @@
         <a class="nav-link" href="/campgrounds">Campgrounds</a>
         <a class="nav-link" href="/campgrounds/new">Add your camp</a>
       </div>
+      <div class="navbar-nav ms-auto">
+        <% if(!currentUser) {%>
+        <a class="nav-link mx-3" href="/login">Login</a>
+        <a class="nav-link mx-3" href="/register">Register</a>
+        <% } else {%>
+        <a class="mx-3 nav-link btn-danger btn" href="/logout">Logout</a>
+        <% } %>
+      </div>
     </div>
   </div>
 </nav>

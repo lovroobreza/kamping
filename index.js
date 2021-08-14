@@ -64,6 +64,7 @@ const ExpressError = require('./utilities/ExpressError')
  
 //flash
 app.use((req,res,next)=>{
+    res.locals.currentUser = req.user
     res.locals.success = req.flash('success')
     res.locals.error = req.flash('error')
     next()
@@ -72,6 +73,9 @@ app.use((req,res,next)=>{
 //paths
 const campRoutes = require('./routes/campRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
+const userRoutes = require('./routes/userRoutes')
+
+app.use('/', userRoutes)
 app.use('/campgrounds', campRoutes)
 app.use('/campgrounds/:id/reviews', reviewRoutes)
 
