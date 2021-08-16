@@ -16,9 +16,20 @@
           <small class="text-muted"><%= campground.location %></small>
         </li>
         <li class="list-group-item text-center">
+          <small class="text-muted"
+            >Contact
+            <a href="#" class="show-author-link">
+              <%= campground.user.username %>
+            </a>
+            for more inforamtions.</small
+          >
+        </li>
+        <li class="list-group-item text-center">
           <%= campground.price %>€ / night
         </li>
       </ul>
+
+      <% if (currentUser && campground.user.equals(currentUser._id)){ %>
       <div class="card-body d-flex justify-content-center align-items-center">
         <a class="btn btn-success" href="/campgrounds/<%= campground._id%>/edit"
           >Edit the camp</a
@@ -31,6 +42,8 @@
           <button class="btn btn-danger ms-5">delete the camp</button>
         </form>
       </div>
+      <% } %>
+
       <div class="card-footer text-muted text-center">3 days ago</div>
     </div>
   </div>

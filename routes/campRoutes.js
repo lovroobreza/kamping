@@ -27,6 +27,7 @@ router.get('/new', isLoggedIn, (req,res)=>{
 
 router.post('/', validateCampground, isLoggedIn, catchAsync(async(req, res, next)=>{
     const campground = new Campground(req.body.campground)
+    campground.user = req.user._id
     await campground.save()
     req.flash('success', 'successfuly made new campground')
     res.redirect(`/campgrounds/${campground._id}`)
@@ -34,7 +35,7 @@ router.post('/', validateCampground, isLoggedIn, catchAsync(async(req, res, next
 
 router.get('/:id', catchAsync(async(req,res)=>{
     const {id} = req.params
-    const campground = await Campground.findById(id).populate('reviews')
+    const campground = await Campground.findById(id).populate('reviews').populate('user')
     if(!campground){
         req.flash('error', 'The camp is missing, it might have gotten deleted')
         return res.redirect('/campgrounds')
@@ -44,10 +45,15 @@ router.get('/:id', catchAsync(async(req,res)=>{
 
 router.put('/:id', validateCampground, isLoggedIn, catchAsync(async (req,res)=>{
     const {id}= req.params
-    const campground = await Campground.findByIdAndUpdate(id, {...req.body.campground})
+    const campground = await Campground.findById(id)
+    if(!campground.user.equals(req.user._id) ){
+        req.flash('error', 'You cant change something that isnt yours')
+        return res.redirect(`/campgrounds`)        
+    } else{
+    const camp = await Campground.findByIdAndUpdate(id, {...req.body.campground})
     req.flash('success', 'successfuly updated your campground')
     res.redirect(`/${campground._id}`)
-}))
+}}))
 
 router.delete('/:id', isLoggedIn, catchAsync(async(req,res)=>{
     const {id}= req.params
