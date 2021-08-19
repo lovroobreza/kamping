@@ -34,7 +34,6 @@
         <a class="btn btn-success" href="/campgrounds/<%= campground._id%>/edit"
           >Edit the camp</a
         >
-
         <form
           action="/campgrounds/<%= campground._id %>?_method=DELETE"
           method="POST"
@@ -50,6 +49,7 @@
 
   <!-- reviews -->
   <div class="col-6">
+    <% if(currentUser){ %>
     <h2 class="h2 text-center mb-4">Add a review</h2>
     <form
       action="/campgrounds/<%=campground._id%>/reviews"
@@ -84,7 +84,7 @@
       </div>
       <button type="submit" class="btn btn-success">Submit</button>
     </form>
-
+    <% } %>
     <!-- all reviews -->
     <div class="mt-5">
       <h2 class="text-center">
@@ -94,13 +94,17 @@
       <div class="card mb-3">
         <div class="card-body">
           <p class="card-title">Rating: <%= review.rating%></p>
-          <p class="card-list">Review: <%=review.body%></p>
+          <p class="card-subtitle">Review by: <%= review.user.username %></p>
+          <p class="card-body"><%=review.body%></p>
+          <% if(currentUser && review.user.equals(currentUser._id)) {%>
           <form
             action="/campgrounds/<%= campground._id %>/reviews/<%=review._id %>?_method=DELETE"
             method="POST"
           >
             <button class="btn btn-sm btn-danger">Delete</button>
           </form>
+
+          <% } %>
         </div>
       </div>
       <% } %>

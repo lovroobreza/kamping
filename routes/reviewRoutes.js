@@ -9,6 +9,8 @@ const Campground = require('../models/Campground')
 
 const { reviewSchema } = require('../schemas')
 
+const { isLoggedIn } = require('../utilities/Middleware')
+
 const validateReview =(req,res,next)=>{
     const {error} = reviewSchema.validate(req.body)
     if(error){
@@ -19,9 +21,20 @@ const validateReview =(req,res,next)=>{
     }
 }
 
-router.post('/', validateReview, catchAsync(async(req,res)=>{
+const isReviewUser = async(req,res,next) =>{
+    const {id, reviewId} =req.params
+    const review = await Review.findById(reviewId)
+    if(!review.user.equals(req.user._id)){
+        req.flash('error', 'you cant deleted other people reviews')
+        return res.redirect(`/campgrounds/${id}`)
+    }
+    next()
+}
+
+router.post('/', validateReview, isLoggedIn, catchAsync(async(req,res)=>{
     const campground = await Campground.findById(req.params.id)
     const review = new Review(req.body.review)
+    review.user = req.user._id
     campground.reviews.push(review)
     await review.save()
     await campground.save()
@@ -29,7 +42,7 @@ router.post('/', validateReview, catchAsync(async(req,res)=>{
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
-router.delete('/:reviewId', catchAsync(async(req,res)=>{
+router.delete('/:reviewId', isLoggedIn,  isReviewUser, catchAsync(async(req,res)=>{
     const {id, reviewId}= req.params
     await Campground.findByIdAndUpdate(id, {$pull: { reviews:reviewId }})
     await Review.findByIdAndDelete(reviewId)

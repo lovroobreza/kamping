@@ -31,11 +31,12 @@ router.get('/login', (req,res)=>{
     res.render('users/login')
 })
 
-router.post('/login', passport.authenticate('local', { failureFlash:true, failureRedirect:'/login' }), (req,res)=>{    
-    req.flash('success', 'Welcome back')
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+    req.flash('success', 'welcome back!')
     const redirectUrl = req.session.returnTo || '/campgrounds'
-    delete res.session.returnTo
+    delete req.session.returnTo
     res.redirect(redirectUrl)
+    console.log(redirectUrl);
 })
 
 router.get('/logout', (req,res)=>{
