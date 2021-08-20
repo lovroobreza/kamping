@@ -25,7 +25,7 @@ module.exports.isUser = async(req,res,next) =>{
     const {id}= req.params
     const campground = await Campground.findById(id)
 
-    if (!campground.user[0].equals(req.user._id) ){
+    if (!campground.user._id.equals(req.user._id) ){
         req.flash('error', 'You cant change something that isnt yours')
         return res.redirect(`/campgrounds`)        
     }

@@ -3,11 +3,12 @@
 <div class="row">
   <div class="col-6">
     <div class="card mb-5" style="width: 100%">
-      <img
-        src="<%= campground.image %>"
-        class="card-img-top"
-        alt="camp image"
-      />
+      <% for(let img of campground.images) {%>
+
+      <img src="<%= img.url %>" class="card-img-top" alt="camp image" />
+
+      <% } %>
+
       <div class="card-body">
         <h5 class="card-title"><%= campground.title %></h5>
         <p class="card-text"><%= campground.description %></p>
@@ -30,7 +31,7 @@
         </li>
       </ul>
 
-      <% if (currentUser && campground.user.equals(currentUser._id)){ %>
+      <% if (currentUser && campground.user._id.equals(currentUser._id)){ %>
       <div class="card-body d-flex justify-content-center align-items-center">
         <a class="btn btn-success" href="/campgrounds/<%= campground._id%>/edit"
           >Edit the camp</a
@@ -43,7 +44,6 @@
         </form>
       </div>
       <% } %>
-
       <div class="card-footer text-muted text-center">3 days ago</div>
     </div>
   </div>
@@ -58,54 +58,27 @@
       class="border p-3 validated-form"
       novalidate
     >
-      <div class="mb-3">
-        <fieldset class="starability-basic">
-          <input
-            type="radio"
-            id="no-rate"
-            class="input-no-rate"
-            name="review[rating]"
-            value="3"
-            checked
-            aria-label="No rating."
-          />
-          <input
-            type="radio"
-            id="first-rate1"
-            name="review[rating]"
-            value="1"
-          />
-          <label for="first-rate1" title="Terrible">1 star</label>
-          <input
-            type="radio"
-            id="first-rate2"
-            name="review[rating]"
-            value="2"
-          />
-          <label for="first-rate2" title="Not good">2 stars</label>
-          <input
-            type="radio"
-            id="first-rate3"
-            name="review[rating]"
-            value="3"
-          />
-          <label for="first-rate3" title="Average">3 stars</label>
-          <input
-            type="radio"
-            id="first-rate4"
-            name="review[rating]"
-            value="4"
-          />
-          <label for="first-rate4" title="Very good">4 stars</label>
-          <input
-            type="radio"
-            id="first-rate5"
-            name="review[rating]"
-            value="5"
-          />
-          <label for="first-rate5" title="Amazing">5 stars</label>
-        </fieldset>
-      </div>
+      <fieldset class="starability-basic">
+        <input
+          type="radio"
+          id="no-rate"
+          class="input-no-rate"
+          name="review[rating]"
+          value="3"
+          checked
+          aria-label="No rating."
+        />
+        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+        <label for="first-rate1" title="Terrible">1 star</label>
+        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+        <label for="first-rate2" title="Not good">2 stars</label>
+        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+        <label for="first-rate3" title="Average">3 stars</label>
+        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+        <label for="first-rate4" title="Very good">4 stars</label>
+        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+        <label for="first-rate5" title="Amazing">5 stars</label>
+      </fieldset>
       <div class="mb-3">
         <label for="body" class="form-label">Tell us more:</label>
         <textarea
